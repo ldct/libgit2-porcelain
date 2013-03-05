@@ -18,12 +18,13 @@ int stage(char* filename) {
 
 int commit(char* message) {
 
+  git_index *index;
   git_oid tree_oid;
+  git_tree *tree;
+  
   git_oid head_oid, commit_oid;
   git_commit* head_commit;
-  git_tree *tree;
   git_signature *signature;
-  git_index *index;
   int head_missing;
 
   git_repository_index(&index, repo);
@@ -68,62 +69,6 @@ int commit(char* message) {
   return 0;
 }
 
-int listrefs() {
-  git_strarray ref_list;
-  git_reference_list(&ref_list, repo, GIT_REF_LISTALL);
-
-  const char *refname;
-  git_reference *ref;
-  
-  char out[41];
-  out[40] = '\0';
-  
-  int i;
-
-  for (i = 0; i < ref_list.count; ++i) {
-    refname = ref_list.strings[i];
-    git_reference_lookup(&ref, repo, refname);
-
-    switch (git_reference_type(ref)) {
-    case GIT_REF_OID:
-      git_oid_fmt(out, git_reference_target(ref));
-      printf("%s [%s]\n", refname, out);
-      break;
-    case GIT_REF_SYMBOLIC:
-      printf("%s => %s\n", refname, git_reference_symbolic_target(ref));
-      break;
-    default:
-      fprintf(stderr, "Unexpected reference type\n");
-      exit(1);
-    }
-  }
-
-  git_strarray_free(&ref_list);
-}
-
-int revwalk_from_head(git_repository* repo) {
-  git_revwalk *walk;
-  git_commit *w_commit;
-  git_oid w_oid;
-  
-  char out[41];
-  out[40] = '\0';
-
-  git_revwalk_new(&walk, repo);
-  git_revwalk_sorting(walk, GIT_SORT_TOPOLOGICAL);
-  
-  git_revwalk_push_head(walk);
-  while ((git_revwalk_next(&w_oid, walk)) == 0) {
-    git_oid_fmt(out, &w_oid);
-    git_commit_lookup(&w_commit, repo, &w_oid);
-    printf("%s %s", out, git_commit_message(w_commit));
-    git_commit_free(w_commit);
-  }
-  git_revwalk_free(walk);
-
-  return 0;
-}
-
 int main() {
   
   git_repository_init(&repo, "zit", 0);
@@ -134,11 +79,7 @@ int main() {
 
   touch("zit/TODO", "- Make project logo \n- Watch Friends");
   stage("TODO");
-  commit("TODO\n");
-
-  revwalk_from_head(repo);
-  
-  listrefs();
+  commit("todo\n");
   
   return 0;
 }

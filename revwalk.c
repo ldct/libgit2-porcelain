@@ -24,9 +24,13 @@ int revwalk_from_head(git_repository* repo) {
   return 0;
 }
 
-int main() {
+int main(int argc, char** argv) {
   git_repository* repo;
   
-  git_repository_open(&repo, ".");
+  if (argc < 2) {
+    git_repository_open(&repo, ".");
+  } else {
+    git_repository_open(&repo, argv[1]);
+  }
   return revwalk_from_head(repo);
 }
