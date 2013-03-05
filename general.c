@@ -5,25 +5,39 @@
 
 git_repository* repo;
 
-//TODO: advance HEAD, link to parent commit
-int stage_and_commit(char* filename, char* message) { //only works for a single file
-
-  git_oid tree_oid, commit_oid;
-  git_tree *tree;
-  git_signature *signature;
+int stage(char* filename) {
   git_index *index;
 
   git_repository_index(&index, repo);
   git_index_add_bypath(index, filename);
   git_index_write(index);
+  
+  git_index_free(index);
+  return 0;
+}
 
+int commit(char* message) {
+
+  git_oid tree_oid;
+  git_oid head_oid, commit_oid;
+  git_commit* head_commit;
+  git_tree *tree;
+  git_signature *signature;
+  git_index *index;
+  int head_missing;
+
+  git_repository_index(&index, repo);
   git_index_write_tree(&tree_oid, index);
   git_index_free(index);
     
   git_tree_lookup(&tree, repo, &tree_oid);
   
   git_signature_new(&signature, "Li Xuanji", "xuanji@gmail.com", 1323847743, 60);
-  git_commit_create_v(
+  
+  head_missing = git_reference_name_to_id(&head_oid, repo, "HEAD");
+  
+  if (head_missing) {
+    git_commit_create_v(
     &commit_oid,
     repo,
     "HEAD",
@@ -33,6 +47,20 @@ int stage_and_commit(char* filename, char* message) { //only works for a single 
     message,
     tree,
     0);
+  } else {
+    git_commit_lookup(&head_commit, repo, &head_oid);
+    git_commit_create_v(
+      &commit_oid,
+      repo,
+      "HEAD",
+      signature,
+      signature,
+      NULL,
+      message,
+      tree,
+      1,
+      head_commit); 
+  }
 
   git_tree_free(tree);
   git_signature_free(signature);
@@ -101,10 +129,12 @@ int main() {
   git_repository_init(&repo, "zit", 0);
 
   touch("zit/readme", "Zit \n --- git for zombieis");
-  stage_and_commit("readme", "Initial commit\n\0");
+  stage("readme");
+  commit("Initial commit\n");
 
   touch("zit/TODO", "- Make project logo \n- Watch Friends");
-  stage_and_commit("TODO", "TODO\n\0");
+  stage("TODO");
+  commit("TODO\n");
 
   revwalk_from_head(repo);
   
