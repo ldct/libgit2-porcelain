@@ -6,7 +6,7 @@
 git_repository* repo;
 
 int stage(char* filename) {
-  git_index *index;
+  git_index* index;
 
   git_repository_index(&index, repo);
   git_index_add_bypath(index, filename);
@@ -28,9 +28,7 @@ int commit(char* message) {
   int head_missing;
 
   git_repository_index(&index, repo);
-  git_index_write_tree(&tree_oid, index);
-  git_index_free(index);
-    
+  git_index_write_tree(&tree_oid, index);    
   git_tree_lookup(&tree, repo, &tree_oid);
   
   git_signature_new(&signature, "Li Xuanji", "xuanji@gmail.com", 1323847743, 60);
@@ -63,7 +61,11 @@ int commit(char* message) {
       head_commit); 
   }
 
+  //git_index_clear(index);
+  git_index_write(index);
+
   git_tree_free(tree);
+  git_index_free(index);
   git_signature_free(signature);
 
   return 0;
@@ -73,13 +75,13 @@ int main() {
   
   git_repository_init(&repo, "zit", 0);
 
-  touch("zit/readme", "Zit \n --- git for zombieis");
+  touch("zit/readme", "Zit \n --- git for zombieis\n");
   stage("readme");
   commit("Initial commit\n");
 
-  touch("zit/TODO", "- Make project logo \n- Watch Friends");
+  touch("zit/TODO", "- Make project logo \n- Watch Friends\n");
   stage("TODO");
-  commit("todo\n");
+  //commit("todo\n");
   
   return 0;
 }

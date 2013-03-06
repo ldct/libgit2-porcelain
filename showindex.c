@@ -23,9 +23,13 @@ int show_index(git_repository* repo) {
   git_tree_walk(index_tree, GIT_TREEWALK_PRE, treewalk_cb, &ct);
 }
 
-int main() {
+int main(int argc, char** argv) {
   git_repository* repo;
   
-  git_repository_open(&repo, ".");
+  if (argc < 2) {
+    git_repository_open(&repo, ".");
+  } else {
+    git_repository_open(&repo, argv[1]);
+  }
   return show_index(repo);
 }
