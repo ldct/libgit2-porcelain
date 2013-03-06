@@ -11,3 +11,4 @@ gcc ./general.c -lgit2 -o bin/general
 gcc ./showindex.c -lgit2 -o bin/showindex
 gcc ./listodb.c -lgit2 -o bin/listodb
 gcc ./diff-cached.c -lgit2 -o bin/diff-cached
+gcc ./diff.c -lgit2 -o bin/diff
