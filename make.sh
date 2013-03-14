@@ -10,5 +10,6 @@ gcc ./listrefs.c -lgit2 -o bin/listrefs
 gcc ./general.c -lgit2 -o bin/general
 gcc ./showindex.c -lgit2 -o bin/showindex
 gcc ./listodb.c -lgit2 -o bin/listodb
-gcc ./diff-cached.c -lgit2 -o bin/diff-cached
-gcc ./diff.c -lgit2 -o bin/diff
+gcc ./diff-head-index.c -lgit2 -o bin/diff-head-index
+gcc ./diff-index-workdir.c -lgit2 -o bin/diff-index-workdir
+gcc ./diff-head-workdir.c -lgit2 -o bin/diff-head-workdir

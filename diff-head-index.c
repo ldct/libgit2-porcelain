@@ -4,7 +4,7 @@
 int diff_print_cb(
   const git_diff_delta *delta,
   const git_diff_range *range,
-  char line_origin, /**< GIT_DIFF_LINE_... value from above */
+  char line_origin,
   const char *content,
   size_t content_len,
   void *payload)
