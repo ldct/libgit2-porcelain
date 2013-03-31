@@ -18,7 +18,7 @@ void print_diff(git_diff_list* diff)
   git_diff_print_patch(diff, diff_print_cb, NULL);
 }
 
-//diffs HEAD and index - ie changes to be committed
+//diffs HEAD and index - ie changes to be committed (staged changes)
 int diff_cached(git_repository* repo) {
   git_diff_list* diff;
 

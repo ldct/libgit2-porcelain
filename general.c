@@ -81,7 +81,7 @@ int main() {
 
   touch("zit/TODO", "- Make project logo \n- Watch Friends\n");
   stage("TODO");
-  //commit("todo\n");
+  commit("todo\n");
   
   return 0;
 }

@@ -21,15 +21,19 @@ int show_index(git_repository* repo) {
   git_tree_lookup(&index_tree, repo, &index_tree_oid);
   
   git_tree_walk(index_tree, GIT_TREEWALK_PRE, treewalk_cb, &ct);
+  return 1;
+}
+
+int show_index_str(char* s) {
+  git_repository* repo;
+  git_repository_open(&repo, s);
+  return show_index(repo);
 }
 
 int main(int argc, char** argv) {
-  git_repository* repo;
-  
   if (argc < 2) {
-    git_repository_open(&repo, ".");
+    return show_index_str(".")
   } else {
-    git_repository_open(&repo, argv[1]);
+    return show_index_str(argv[1]);
   }
-  return show_index(repo);
 }

@@ -19,6 +19,7 @@ void print_diff(git_diff_list* diff)
 }
 
 //diffs workdir and index - ie unstaged changes
+//equivalent to `git diff` - WORKS
 int diff(git_repository* repo) {
   git_diff_list* diff;
 
